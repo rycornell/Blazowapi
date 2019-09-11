@@ -1,0 +1,46 @@
+﻿@page "/orders"
+
+@using Blazowapi.Blazor.OrderApi
+@inject Client WebApiService
+
+    <h1>Orders</h1>
+
+    <p>This component demonstrates fetching data from a .NET Core Web API using a generated client from <a href="https://github.com/unchase/Unchase.OpenAPI.Connectedservice/" target="_blank">Unchase Connected Service</a></p>
+
+@if (orders == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.Date.Date.ToShortDateString()</td>
+                    <td>@order.TemperatureC</td>
+                    <td>@order.TemperatureF</td>
+                    <td>@order.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    ICollection<Order> orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await WebApiService.OrderAsync(new System.Threading.CancellationToken());
+    }
+}
